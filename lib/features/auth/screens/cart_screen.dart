@@ -62,6 +62,25 @@ class CartScreen extends StatelessWidget {
                             ),
 
                             const SizedBox(width: 12),
+
+                            /// CONTENT
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 4),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       );

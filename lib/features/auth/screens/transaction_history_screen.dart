@@ -74,7 +74,26 @@ class TransactionHistoryScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
 
-                  child: Row(children: [const SizedBox(width: 14)]),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 55,
+                        height: 55,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: paid
+                              ? Colors.green.shade100
+                              : Colors.orange.shade100,
+                        ),
+                        child: Icon(
+                          paid ? Icons.check_circle : Icons.schedule,
+                          color: paid ? Colors.green : Colors.orange,
+                        ),
+                      ),
+
+                      const SizedBox(width: 14),
+                    ],
+                  ),
                 ),
               );
             },

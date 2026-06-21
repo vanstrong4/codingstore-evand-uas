@@ -44,6 +44,16 @@ class ProductCard extends StatelessWidget {
               ),
             ),
           ),
+
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// NAME
+              ],
+            ),
+          ),
         ],
       ),
     );

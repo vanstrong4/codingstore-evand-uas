@@ -133,6 +133,14 @@ class CartScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            Text(
+                              "Rp ${cart.totalPrice}",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1565C0),
+                              ),
+                            ),
                           ],
                         ),
                       ],

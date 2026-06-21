@@ -91,6 +91,27 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
                 ),
 
                 const SizedBox(height: 20),
+
+                /// INPUT
+                TextField(
+                  controller: pinController,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    letterSpacing: 6,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: "------",
+                    filled: true,
+                    fillColor: const Color(0xFFF3F6FB),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

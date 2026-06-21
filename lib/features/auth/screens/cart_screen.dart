@@ -187,4 +187,18 @@ class CartScreen extends StatelessWidget {
             ),
     );
   }
+
+  /// EMPTY STATE
+  Widget _buildEmpty() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.shopping_cart_outlined, size: 80, color: Colors.grey),
+          SizedBox(height: 10),
+          Text("Cart is empty", style: TextStyle(color: Colors.grey)),
+        ],
+      ),
+    );
+  }
 }

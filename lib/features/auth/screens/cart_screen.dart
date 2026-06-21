@@ -89,6 +89,17 @@ class CartScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
+
+                            /// DELETE
+                            IconButton(
+                              onPressed: () {
+                                cart.removeItem(item);
+                              },
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                color: Colors.red,
+                              ),
+                            ),
                           ],
                         ),
                       );

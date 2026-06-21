@@ -164,6 +164,35 @@ class LoginScreen extends StatelessWidget {
                         ),
 
                         const SizedBox(height: 20),
+
+                        // pindah ke register
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("Belum punya akun? "),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => RegisterScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "Daftar",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.lightBlue[700],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),

@@ -156,6 +156,16 @@ class CartScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(14),
                               ),
                             ),
+                            onPressed: () {
+                              if (cart.items.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Keranjang masih kosong"),
+                                  ),
+                                );
+                                return;
+                              }
+                            },
                           ),
                         ),
                       ],

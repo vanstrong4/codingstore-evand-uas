@@ -26,8 +26,24 @@ class ProductCard extends StatelessWidget {
         ],
       ),
 
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-       
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// IMAGE
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Image.network(
+                product.image,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: Colors.grey[200],
+                  child: const Icon(Icons.image, size: 40),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

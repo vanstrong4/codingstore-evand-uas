@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../data/providers/cart_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../../data/services/transaction_service.dart';
 
 class CheckoutScreen extends StatelessWidget {
   @override
@@ -84,32 +86,53 @@ class CheckoutScreen extends StatelessWidget {
                       backgroundColor: Color(0xFF1565C0),
                       padding: EdgeInsets.symmetric(vertical: 14),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (cart.items.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Keranjang kosong")),
+                          const SnackBar(content: Text("Keranjang kosong")),
                         );
                         return;
                       }
 
-                      cart.clearCart();
+                      try {
+                        final service = TransactionService();
 
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: Text("Sukses"),
-                          content: Text("Checkout berhasil!"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              },
-                              child: Text("OK"),
+                        await service.createTransaction(
+                          items: cart.items,
+                          total: cart.totalPrice,
+                        );
+
+                        cart.clearCart();
+
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text("Sukses"),
+                            content: const Text(
+                              "Checkout berhasil dibuat (pending payment)",
                             ),
-                          ],
-                        ),
-                      );
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context); // dialog
+
+                                  Future.delayed(
+                                    Duration(milliseconds: 100),
+                                    () {
+                                      Navigator.pop(context); // screen
+                                    },
+                                  );
+                                },
+                                child: const Text("OK"),
+                              ),
+                            ],
+                          ),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Gagal checkout: $e")),
+                        );
+                      }
                     },
                     child: Text(
                       "Checkout",

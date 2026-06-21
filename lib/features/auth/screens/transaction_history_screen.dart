@@ -42,6 +42,27 @@ class TransactionHistoryScreen extends StatelessWidget {
 
               final total = data['total'] ?? 0;
               final status = data['status'] ?? 'pending';
+
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: status == 'paid'
+                        ? Colors.green
+                        : Colors.orange,
+                    child: Icon(
+                      status == 'paid' ? Icons.check : Icons.schedule,
+                      color: Colors.white,
+                    ),
+                  ),
+                  title: Text(
+                    "Rp $total",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text("Status: ${status.toUpperCase()}"),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                ),
+              );
             },
           );
         },

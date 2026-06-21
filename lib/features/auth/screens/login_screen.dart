@@ -6,6 +6,8 @@ import '../../auth/widgets/custom_buttons.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
+  LoginScreen({super.key});
+
   // ambil input email & password
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -28,17 +30,19 @@ class LoginScreen extends StatelessWidget {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 40),
-                        // logo evand coding store
+                        const SizedBox(height: 40),
+
+                        // logo evan coding store
                         Center(
                           child: Image.asset("images/ecs.png", height: 180),
                         ),
 
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
+
                         // judul
                         Text(
                           "Login",
@@ -49,21 +53,23 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
 
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
 
-                        Text(
+                        const Text(
                           "Masuk ke akun kamu",
                           style: TextStyle(color: Colors.lightBlue),
                         ),
 
-                        SizedBox(height: 30),
+                        const SizedBox(height: 30),
+
                         // input email
                         CustomTextField(
                           controller: emailController,
                           hint: "Email",
                         ),
 
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
+
                         // input password
                         CustomTextField(
                           controller: passwordController,
@@ -71,123 +77,41 @@ class LoginScreen extends StatelessWidget {
                           obscure: true,
                         ),
 
-                        SizedBox(height: 30),
-                        // tombol login
-                        CustomButton(
-                          text: "Login",
-                          onPressed: () async {
-                            String email = emailController.text.trim();
-                            String password = passwordController.text.trim();
-                            // cek kalo kosong
-                            if (email.isEmpty || password.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Email & Password wajib diisi"),
-                                ),
-                              );
-                              return;
-                            }
-                            // validasi email
-                            if (!email.contains("@")) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Format email tidak valid"),
-                                ),
-                              );
-                              return;
-                            }
+                        const SizedBox(height: 30),
 
-                            try {
-                              // login ke firebase dan dapetin token
-                              final token = await auth.signIn(email, password);
+                        const SizedBox(height: 10),
 
-                              print("ACCESS TOKEN: $token");
-
-                              showDialog(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                  title: Text("Access Token"),
-                                  content: SingleChildScrollView(
-                                    child: Text(token),
-                                  ),
-                                ),
-                              );
-
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (_) => HomeScreen()),
-                              );
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    e.toString().contains("verifikasi")
-                                        ? "Email belum diverifikasi, cek inbox kamu"
-                                        : "Email atau password salah",
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                        ),
-
-                        SizedBox(height: 10),
-
+                        // login google
                         Center(
                           child: TextButton(
                             onPressed: () async {
                               try {
-                                await auth.signInWithGoogle();
+                                final user = await auth.signInWithGoogle();
 
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => HomeScreen(),
-                                  ),
-                                );
+                                if (user != null) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => HomeScreen(),
+                                    ),
+                                  );
+                                }
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Login Google gagal")),
+                                  const SnackBar(
+                                    content: Text("Login Google gagal"),
+                                  ),
                                 );
                               }
                             },
-                            child: Text(
+                            child: const Text(
                               "Login with Google",
                               style: TextStyle(color: Colors.lightBlue),
                             ),
                           ),
                         ),
 
-                        SizedBox(height: 20),
-
-                        // pindah ke register kalo belum ada akun
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Belum punya akun? "),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => RegisterScreen(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  "Daftar",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.lightBlue[700],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),

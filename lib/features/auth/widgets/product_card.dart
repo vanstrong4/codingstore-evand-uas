@@ -74,6 +74,24 @@ class ProductCard extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 /// PRICE + BUTTON
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Rp ${product.price}",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: primaryBlue,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 8),
+                  ],
+                ),
               ],
             ),
           ),

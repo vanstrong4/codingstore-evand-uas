@@ -14,6 +14,7 @@ class ProductCard extends StatelessWidget {
     final Color primaryBlue = const Color(0xFF1565C0);
 
     return Container(
+      constraints: const BoxConstraints(maxHeight: 300),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
@@ -33,7 +34,7 @@ class ProductCard extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
             child: AspectRatio(
-              aspectRatio: 1,
+              aspectRatio: 1.25,
               child: Image.network(
                 product.image,
                 fit: BoxFit.cover,

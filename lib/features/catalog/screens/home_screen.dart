@@ -4,6 +4,7 @@ import '../../auth/widgets/product_card.dart';
 import '../../auth/widgets/custom_appbar.dart';
 import '../../../data/models/product_model.dart';
 import '../../auth/screens/cart_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../data/services/auth_service.dart';
 import '../../auth/screens/login_screen.dart';
 
@@ -15,6 +16,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final name = user?.email?.split('@')[0] ?? 'Developer';
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
 
@@ -64,17 +67,17 @@ class HomeScreen extends StatelessWidget {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
-                  "Welcome Developer 👨‍💻",
-                  style: TextStyle(
+                  "Welcome $name",
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 6),
-                Text(
+                const SizedBox(height: 6),
+                const Text(
                   "Build, learn, and shop your tools",
                   style: TextStyle(color: Colors.white70),
                 ),

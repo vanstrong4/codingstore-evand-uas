@@ -44,4 +44,46 @@ class AuthService {
 
     return user;
   }
+
+  // login dengan google
+  Future<User?> signInWithGoogle() async {
+    final googleUser = await GoogleSignIn().signIn();
+
+    if (googleUser == null) return null;
+
+    final googleAuth = await googleUser.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final result = await _auth.signInWithCredential(credential);
+
+    final user = result.user;
+
+    if (user != null) {
+      final walletDoc = await _firestore
+          .collection('wallets')
+          .doc(user.uid)
+          .get();
+
+      if (!walletDoc.exists) {
+        await _firestore.collection('wallets').doc(user.uid).set({
+          'userId': user.uid,
+          'email': user.email,
+          'balance': 0,
+          'pin': '123456',
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+    }
+
+    return user;
+  }
+
+  // logout
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
 }

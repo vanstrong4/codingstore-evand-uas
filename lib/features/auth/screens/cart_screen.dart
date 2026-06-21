@@ -78,6 +78,14 @@ class CartScreen extends StatelessWidget {
                                   ),
 
                                   const SizedBox(height: 4),
+
+                                  Text(
+                                    "Rp ${item.price}",
+                                    style: const TextStyle(
+                                      color: Color(0xFF1565C0),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

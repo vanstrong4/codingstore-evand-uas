@@ -79,6 +79,58 @@ class LoginScreen extends StatelessWidget {
 
                         const SizedBox(height: 30),
 
+                        // tombol login
+                        CustomButton(
+                          text: "Login",
+                          onPressed: () async {
+                            String email = emailController.text.trim();
+                            String password = passwordController.text.trim();
+
+                            // cek kosong
+                            if (email.isEmpty || password.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Email & Password wajib diisi"),
+                                ),
+                              );
+                              return;
+                            }
+
+                            // validasi email
+                            if (!email.contains("@")) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Format email tidak valid"),
+                                ),
+                              );
+                              return;
+                            }
+
+                            try {
+                              await auth.signIn(email, password);
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Login berhasil")),
+                              );
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (_) => HomeScreen()),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    e.toString().contains("verifikasi")
+                                        ? "Email belum diverifikasi, cek inbox kamu"
+                                        : "Email atau password salah",
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+
                         const SizedBox(height: 10),
 
                         // login google

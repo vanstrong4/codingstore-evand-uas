@@ -186,7 +186,11 @@ class RegisterScreen extends StatelessWidget {
                                 );
                                 // notifikasi sukses
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Register berhasil")),
+                                  SnackBar(
+                                    content: Text(
+                                      "Register berhasil, cek email kamu untuk verifikasi dahulu",
+                                    ),
+                                  ),
                                 );
                                 // pindah ke login
                                 Navigator.pop(context);

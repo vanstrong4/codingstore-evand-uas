@@ -4,73 +4,55 @@ import '../../../presentation/cart/screens/checkout_screen.dart';
 import '../../../data/providers/cart_provider.dart';
 
 class CartScreen extends StatelessWidget {
+  const CartScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    // ambil data dari provider
     final cart = Provider.of<CartProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Keranjang")),
-      body: Column(
-        children: [
-          // ini list item
-          Expanded(
-            child: ListView.builder(
-              itemCount: cart.items.length,
-              itemBuilder: (context, index) {
-                final item = cart.items[index];
+      backgroundColor: const Color(0xFFF5F7FB),
 
-                return ListTile(
-                  // gambar
-                  leading: Image.network(item.image, width: 50),
-                  // nama produk
-                  title: Text(item.name),
-                  // harga produk
-                  subtitle: Text("Rp ${item.price}"),
-                  // tombol hapus
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      cart.removeItem(item);
+      /// APPBAR
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color(0xFF1565C0),
+        title: const Text("My Cart", style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+
+      body: cart.items.isEmpty
+          ? _buildEmpty()
+          : Column(
+              children: [
+                /// LIST
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(12),
+                    itemCount: cart.items.length,
+                    itemBuilder: (context, index) {
+                      final item = cart.items[index];
+
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
-                );
-              },
-            ),
-          ),
-
-          // checkout
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Text(
-                  "Total: Rp ${cart.totalPrice}",
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    // cart kosong kasih warning
-                    if (cart.items.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Keranjang masih kosong")),
-                      );
-                      return;
-                    }
-                    // pindah ke checkout kalo udah
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => CheckoutScreen()),
-                    );
-                  },
-                  child: Text("Checkout"),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

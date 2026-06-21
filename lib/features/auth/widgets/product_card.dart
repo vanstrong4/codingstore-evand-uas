@@ -106,6 +106,10 @@ class ProductCard extends StatelessWidget {
                             description: product.description,
                           ),
                         );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Added to cart")),
+                        );
                       },
                     ),
                   ],

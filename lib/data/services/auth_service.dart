@@ -6,6 +6,32 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<void> signUp(String email, String password) async {
+    final userCredential = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    final user = userCredential.user!;
+
+    await user.sendEmailVerification();
+
+    await _firestore.collection('users').doc(user.uid).set({
+      'uid': user.uid,
+      'email': user.email,
+      'name': email.split('@')[0],
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    await _firestore.collection('wallets').doc(user.uid).set({
+      'userId': user.uid,
+      'email': user.email,
+      'balance': 0,
+      'pin': '123456',
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
+
   Future<User> signIn(String email, String password) async {
     final userCredential = await _auth.signInWithEmailAndPassword(
       email: email,

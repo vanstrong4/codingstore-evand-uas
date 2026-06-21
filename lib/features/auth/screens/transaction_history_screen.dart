@@ -32,6 +32,18 @@ class TransactionHistoryScreen extends StatelessWidget {
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(child: Text("Belum ada transaksi"));
           }
+
+          final transactions = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: transactions.length,
+            itemBuilder: (context, index) {
+              final data = transactions[index];
+
+              final total = data['total'] ?? 0;
+              final status = data['status'] ?? 'pending';
+            },
+          );
         },
       ),
     );

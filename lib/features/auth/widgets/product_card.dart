@@ -111,6 +111,20 @@ class ProductCard extends StatelessWidget {
                           const SnackBar(content: Text("Added to cart")),
                         );
                       },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF1565C0), Color(0xFF42A5F5)],
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.add_shopping_cart,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                      ),
                     ),
                   ],
                 ),

@@ -176,4 +176,38 @@ class TransactionHistoryScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.receipt_long_outlined,
+            size: 90,
+            color: Colors.grey.shade400,
+          ),
+
+          const SizedBox(height: 16),
+
+          Text(
+            "Belum Ada Transaksi",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade700,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            "Transaksi yang berhasil akan muncul di sini",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey.shade500),
+          ),
+        ],
+      ),
+    );
+  }
 }

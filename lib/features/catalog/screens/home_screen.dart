@@ -5,19 +5,35 @@ import '../../auth/widgets/custom_appbar.dart';
 import '../../../data/models/product_model.dart';
 import '../../auth/screens/cart_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../data/services/auth_service.dart';
 import '../../auth/screens/login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
+
   final ProductService service = ProductService();
 
   final Color primaryBlue = const Color(0xFF1565C0);
-  final Color lightBlue = const Color(0xFFE3F2FD);
+
+  /// ambil nama user dari firestore
+  Future<String> getUserName() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .get();
+
+    if (doc.exists && doc.data()!.containsKey('name')) {
+      return doc['name'];
+    }
+
+    return 'Developer';
+  }
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final name = user?.email?.split('@')[0] ?? 'Developer';
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
 
@@ -50,7 +66,6 @@ class HomeScreen extends StatelessWidget {
 
       body: Column(
         children: [
-          /// HEADER SECTION
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
@@ -65,29 +80,35 @@ class HomeScreen extends StatelessWidget {
                 bottomRight: Radius.circular(24),
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Welcome $name",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                const Text(
-                  "Build, learn, and shop your tools",
-                  style: TextStyle(color: Colors.white70),
-                ),
-              ],
+            child: FutureBuilder<String>(
+              future: getUserName(),
+              builder: (context, snapshot) {
+                final name = snapshot.data ?? "Developer";
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Welcome $name",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      "Build, learn, and shop your tools",
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
 
           const SizedBox(height: 12),
 
-          /// CONTENT
           Expanded(
             child: StreamBuilder<List<Product>>(
               stream: service.getProducts(),
@@ -98,13 +119,17 @@ class HomeScreen extends StatelessWidget {
                   );
                 }
 
+                if (snapshot.hasError) {
+                  return Center(child: Text(snapshot.error.toString()));
+                }
+
                 final products = snapshot.data ?? [];
 
                 if (products.isEmpty) {
-                  return Center(
+                  return const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Icon(Icons.inbox, size: 60, color: Colors.grey),
                         SizedBox(height: 10),
                         Text(
@@ -129,13 +154,14 @@ class HomeScreen extends StatelessWidget {
                         ),
                     itemBuilder: (context, index) {
                       final product = products[index];
+
                       return Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black12,
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),

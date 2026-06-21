@@ -106,6 +106,20 @@ class CartScreen extends StatelessWidget {
                     },
                   ),
                 ),
+
+                /// BOTTOM SUMMARY
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
     );

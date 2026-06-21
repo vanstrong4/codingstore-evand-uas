@@ -59,6 +59,21 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 /// ICON
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF1565C0), Color(0xFF42A5F5)],
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.lock_outline,
+                    size: 40,
+                    color: Colors.white,
+                  ),
+                ),
               ],
             ),
           ),

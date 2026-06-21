@@ -119,6 +119,12 @@ class CartScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+                  child: SafeArea(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [],
+                    ),
+                  ),
                 ),
               ],
             ),

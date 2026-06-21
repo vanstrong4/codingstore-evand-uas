@@ -173,6 +173,10 @@ class CartScreen extends StatelessWidget {
                                 ),
                               );
                             },
+                            child: const Text(
+                              "Proceed to Checkout",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ],

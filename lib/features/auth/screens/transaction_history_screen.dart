@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TransactionHistoryScreen extends StatelessWidget {
   const TransactionHistoryScreen({super.key});
@@ -10,19 +11,22 @@ class TransactionHistoryScreen extends StatelessWidget {
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FB),
+
       appBar: AppBar(
-        title: const Text(
-          "Riwayat Transaksi",
-          style: TextStyle(color: Colors.white),
-        ),
+        elevation: 0,
         backgroundColor: const Color(0xFF1565C0),
+        title: const Text(
+          "Transaction History",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
+
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('transactions')
             .where('userId', isEqualTo: uid)
-            .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -30,12 +34,13 @@ class TransactionHistoryScreen extends StatelessWidget {
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text("Belum ada transaksi"));
+            return _buildEmptyState();
           }
 
           final transactions = snapshot.data!.docs;
 
           return ListView.builder(
+            padding: const EdgeInsets.all(16),
             itemCount: transactions.length,
             itemBuilder: (context, index) {
               final data = transactions[index];
@@ -43,24 +48,27 @@ class TransactionHistoryScreen extends StatelessWidget {
               final total = data['total'] ?? 0;
               final status = data['status'] ?? 'pending';
 
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: status == 'paid'
-                        ? Colors.green
-                        : Colors.orange,
-                    child: Icon(
-                      status == 'paid' ? Icons.check : Icons.schedule,
-                      color: Colors.white,
+              Timestamp? createdAt = data['createdAt'] as Timestamp?;
+
+              final date = createdAt != null
+                  ? DateFormat('dd MMM yyyy, HH:mm').format(createdAt.toDate())
+                  : '-';
+
+              final bool paid = status == "paid";
+
+              return Container(
+                margin: const EdgeInsets.only(bottom: 14),
+
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
                     ),
-                  ),
-                  title: Text(
-                    "Rp $total",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text("Status: ${status.toUpperCase()}"),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  ],
                 ),
               );
             },

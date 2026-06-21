@@ -90,6 +90,15 @@ class ProductCard extends StatelessWidget {
                     ),
 
                     const SizedBox(width: 8),
+
+                    GestureDetector(
+                      onTap: () {
+                        final cart = Provider.of<CartProvider>(
+                          context,
+                          listen: false,
+                        );
+                      },
+                    ),
                   ],
                 ),
               ],

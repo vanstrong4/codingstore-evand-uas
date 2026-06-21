@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/product_model.dart';
 
 class TransactionService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -11,7 +10,23 @@ class TransactionService {
   }) async {
     final user = FirebaseAuth.instance.currentUser;
 
-    if (user == null) return;
+    if (user == null) throw Exception("User tidak login");
+
+    final walletRef = _firestore.collection('wallets').doc(user.uid);
+
+    final walletSnap = await walletRef.get();
+
+    if (!walletSnap.exists) {
+      throw Exception("Wallet tidak ditemukan");
+    }
+
+    final currentBalance = walletSnap['balance'] ?? 0;
+
+    if (currentBalance < total) {
+      throw Exception("Saldo tidak cukup");
+    }
+
+    await walletRef.update({'balance': currentBalance - total});
 
     await _firestore.collection('transactions').add({
       'userId': user.uid,
@@ -26,7 +41,7 @@ class TransactionService {
           )
           .toList(),
       'total': total,
-      'status': 'pending',
+      'status': 'paid',
       'createdAt': FieldValue.serverTimestamp(),
     });
   }

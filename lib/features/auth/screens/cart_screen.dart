@@ -165,6 +165,13 @@ class CartScreen extends StatelessWidget {
                                 );
                                 return;
                               }
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => CheckoutScreen(),
+                                ),
+                              );
                             },
                           ),
                         ),

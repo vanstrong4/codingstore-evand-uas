@@ -66,17 +66,21 @@ class ProductCard extends StatelessWidget {
                   SizedBox(height: 10),
 
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Rp. ${product.price}",
-                        style: TextStyle(
-                          color: primaryBlue,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          "Rp ${product.price}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: primaryBlue,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
 
-                      // 🔥 INI YANG DIPERBAIKI
+                      const SizedBox(width: 8),
+
                       GestureDetector(
                         onTap: () {
                           final cart = Provider.of<CartProvider>(
@@ -94,19 +98,18 @@ class ProductCard extends StatelessWidget {
                           );
 
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Ditambahkan ke keranjang")),
+                            const SnackBar(
+                              content: Text("Ditambahkan ke keranjang"),
+                            ),
                           );
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
+                          padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
                             color: primaryBlue,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.shopping_cart,
                             size: 16,
                             color: Colors.white,

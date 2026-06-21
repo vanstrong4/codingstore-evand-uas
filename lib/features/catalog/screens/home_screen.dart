@@ -10,19 +10,19 @@ import '../../auth/screens/login_screen.dart';
 class HomeScreen extends StatelessWidget {
   final ProductService service = ProductService();
 
-  final Color primaryBlue = Color(0xFF1565C0);
-  final Color lightBlue = Color(0xFFE3F2FD);
+  final Color primaryBlue = const Color(0xFF1565C0);
+  final Color lightBlue = const Color(0xFFE3F2FD);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightBlue,
+      backgroundColor: const Color(0xFFF5F7FB),
 
       appBar: CustomAppBar(
-        title: "Catalog",
+        title: "Coding Store",
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.shopping_cart),
             onPressed: () {
               Navigator.push(
                 context,
@@ -30,9 +30,8 @@ class HomeScreen extends StatelessWidget {
               );
             },
           ),
-
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () async {
               await AuthService().signOut();
 
@@ -46,33 +45,108 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
 
-      body: StreamBuilder<List<Product>>(
-        stream: service.getProducts(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: primaryBlue));
-          }
-
-          final products = snapshot.data ?? [];
-
-          if (products.isEmpty) {
-            return Center(
-              child: Text(
-                "Barang kosong",
-                style: TextStyle(color: Colors.grey[700]),
+      body: Column(
+        children: [
+          /// HEADER SECTION
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF1565C0), Color(0xFF42A5F5)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-            );
-          }
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(24),
+                bottomRight: Radius.circular(24),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  "Welcome Developer 👨‍💻",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  "Build, learn, and shop your tools",
+                  style: TextStyle(color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
 
-          return ListView.builder(
-            padding: EdgeInsets.all(12),
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return ProductCard(product: product);
-            },
-          );
-        },
+          const SizedBox(height: 12),
+
+          /// CONTENT
+          Expanded(
+            child: StreamBuilder<List<Product>>(
+              stream: service.getProducts(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(color: primaryBlue),
+                  );
+                }
+
+                final products = snapshot.data ?? [];
+
+                if (products.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.inbox, size: 60, color: Colors.grey),
+                        SizedBox(height: 10),
+                        Text(
+                          "Produk belum tersedia",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: GridView.builder(
+                    itemCount: products.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 0.72,
+                        ),
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: ProductCard(product: product),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

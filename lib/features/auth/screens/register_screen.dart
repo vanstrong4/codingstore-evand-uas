@@ -191,8 +191,10 @@ class RegisterScreen extends StatelessWidget {
                                 // pindah ke login
                                 Navigator.pop(context);
                               } catch (e) {
+                                debugPrint("REGISTER ERROR: $e");
+
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Register gagal")),
+                                  SnackBar(content: Text(e.toString())),
                                 );
                               }
                             },

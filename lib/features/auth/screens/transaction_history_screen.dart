@@ -92,6 +92,33 @@ class TransactionHistoryScreen extends StatelessWidget {
                       ),
 
                       const SizedBox(width: 14),
+
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Order #${index + 1}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+
+                            const SizedBox(height: 4),
+
+                            Text(
+                              date,
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontSize: 12,
+                              ),
+                            ),
+
+                            const SizedBox(height: 8),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),

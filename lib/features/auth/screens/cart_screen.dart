@@ -47,6 +47,23 @@ class CartScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+
+                        child: Row(
+                          children: [
+                            /// IMAGE
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(
+                                item.image,
+                                width: 70,
+                                height: 70,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+
+                            const SizedBox(width: 12),
+                          ],
+                        ),
                       );
                     },
                   ),

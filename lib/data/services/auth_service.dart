@@ -27,4 +27,21 @@ class AuthService {
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
+
+  // login
+  Future<User> signIn(String email, String password) async {
+    final userCredential = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    final user = userCredential.user!;
+
+    if (!user.emailVerified) {
+      await _auth.signOut();
+      throw Exception("Email belum diverifikasi");
+    }
+
+    return user;
+  }
 }

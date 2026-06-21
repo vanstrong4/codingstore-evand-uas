@@ -54,6 +54,13 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
                 ),
               ],
             ),
+
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                /// ICON
+              ],
+            ),
           ),
         ),
       ),

@@ -74,6 +74,23 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
                     color: Colors.white,
                   ),
                 ),
+
+                const SizedBox(height: 16),
+
+                const Text(
+                  "Security Verification",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+
+                const SizedBox(height: 6),
+
+                Text(
+                  "Enter your 6-digit PIN to continue",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                ),
+
+                const SizedBox(height: 20),
               ],
             ),
           ),

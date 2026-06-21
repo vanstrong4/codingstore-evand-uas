@@ -70,6 +70,12 @@ class TransactionHistoryScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+
+                  child: Row(children: [const SizedBox(width: 14)]),
+                ),
               );
             },
           );

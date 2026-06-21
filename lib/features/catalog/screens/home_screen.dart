@@ -6,6 +6,7 @@ import '../../../data/models/product_model.dart';
 import '../../auth/screens/cart_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../../data/services/auth_service.dart';
 import '../../auth/screens/login_screen.dart';
 
@@ -58,6 +59,15 @@ class HomeScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (_) => LoginScreen()),
                 (route) => false,
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.receipt_long),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => TransactionHistoryScreen()),
               );
             },
           ),

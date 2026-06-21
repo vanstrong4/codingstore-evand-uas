@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../data/providers/cart_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../data/services/transaction_service.dart';
+import '../../../features/auth/screens/otp_authenticator.dart';
 
 class CheckoutScreen extends StatelessWidget {
   Future<String?> showPinDialog(BuildContext context) {
@@ -127,9 +128,24 @@ class CheckoutScreen extends StatelessWidget {
                         return;
                       }
 
+                      // STEP 1
+                      final verified = await Navigator.push<bool>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AuthVerificationScreen(),
+                        ),
+                      );
+
+                      if (verified != true) {
+                        return;
+                      }
+
+                      // STEP 2
                       final enteredPin = await showPinDialog(context);
 
-                      if (enteredPin == null) return;
+                      if (enteredPin == null) {
+                        return;
+                      }
 
                       try {
                         final service = TransactionService();
@@ -146,9 +162,7 @@ class CheckoutScreen extends StatelessWidget {
                           context: context,
                           builder: (_) => AlertDialog(
                             title: const Text("Sukses"),
-                            content: const Text(
-                              "Checkout berhasil (PIN valid)",
-                            ),
+                            content: const Text("Pembayaran berhasil"),
                             actions: [
                               TextButton(
                                 onPressed: () {

@@ -5,6 +5,39 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../data/services/transaction_service.dart';
 
 class CheckoutScreen extends StatelessWidget {
+  Future<String?> showPinDialog(BuildContext context) {
+    final pinController = TextEditingController();
+
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text("Konfirmasi PIN"),
+          content: TextField(
+            controller: pinController,
+            keyboardType: TextInputType.number,
+            obscureText: true,
+            decoration: const InputDecoration(hintText: "Masukkan PIN 6 digit"),
+            maxLength: 6,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Batal"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, pinController.text);
+              },
+              child: const Text("Konfirmasi"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
@@ -94,12 +127,17 @@ class CheckoutScreen extends StatelessWidget {
                         return;
                       }
 
+                      final enteredPin = await showPinDialog(context);
+
+                      if (enteredPin == null) return;
+
                       try {
                         final service = TransactionService();
 
                         await service.createTransaction(
                           items: cart.items,
                           total: cart.totalPrice,
+                          enteredPin: enteredPin,
                         );
 
                         cart.clearCart();
@@ -109,19 +147,13 @@ class CheckoutScreen extends StatelessWidget {
                           builder: (_) => AlertDialog(
                             title: const Text("Sukses"),
                             content: const Text(
-                              "Checkout berhasil dibuat (pending payment)",
+                              "Checkout berhasil (PIN valid)",
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pop(context); // dialog
-
-                                  Future.delayed(
-                                    Duration(milliseconds: 100),
-                                    () {
-                                      Navigator.pop(context); // screen
-                                    },
-                                  );
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
                                 },
                                 child: const Text("OK"),
                               ),
@@ -129,9 +161,9 @@ class CheckoutScreen extends StatelessWidget {
                           ),
                         );
                       } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Gagal checkout: $e")),
-                        );
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(e.toString())));
                       }
                     },
                     child: Text(

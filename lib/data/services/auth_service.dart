@@ -20,6 +20,8 @@ class AuthService {
       'uid': user.uid,
       'email': user.email,
       'name': email.split('@')[0],
+      'isVerified': false,
+      'authProvider': 'email',
       'createdAt': FieldValue.serverTimestamp(),
     });
 
@@ -40,12 +42,22 @@ class AuthService {
 
     final user = userCredential.user!;
 
-    if (!user.emailVerified) {
+    // refresh status email terbaru
+    await user.reload();
+
+    final refreshedUser = _auth.currentUser!;
+
+    if (!refreshedUser.emailVerified) {
       await _auth.signOut();
       throw Exception("Email belum diverifikasi");
     }
 
-    return user;
+    // update firestore jika sudah verified
+    await _firestore.collection('users').doc(refreshedUser.uid).update({
+      'isVerified': true,
+    });
+
+    return refreshedUser;
   }
 
   Future<User?> signInWithGoogle() async {
@@ -70,6 +82,8 @@ class AuthService {
           'uid': user.uid,
           'email': user.email,
           'name': user.displayName ?? user.email!.split('@')[0],
+          'isVerified': true,
+          'authProvider': 'google',
           'createdAt': FieldValue.serverTimestamp(),
         });
       }

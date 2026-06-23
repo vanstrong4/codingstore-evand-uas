@@ -37,6 +37,7 @@ class TransactionService {
 
     await _firestore.collection('transactions').add({
       'userId': user.uid,
+      'type': 'purchase',
       'items': items
           .map(
             (e) => {

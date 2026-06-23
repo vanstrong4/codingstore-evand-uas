@@ -43,10 +43,18 @@ class TransactionHistoryScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             itemCount: transactions.length,
             itemBuilder: (context, index) {
-              final data = transactions[index];
+              final doc = transactions[index];
 
-              final total = data['total'] ?? 0;
+              final data = doc.data() as Map<String, dynamic>;
+
+              final type = data['type'] ?? 'purchase';
               final status = data['status'] ?? 'pending';
+
+              final isTopup = type == 'topup';
+
+              final amount = isTopup
+                  ? (data['amount'] ?? 0)
+                  : (data['total'] ?? 0);
 
               Timestamp? createdAt = data['createdAt'] as Timestamp?;
 
@@ -54,11 +62,10 @@ class TransactionHistoryScreen extends StatelessWidget {
                   ? DateFormat('dd MMM yyyy, HH:mm').format(createdAt.toDate())
                   : '-';
 
-              final bool paid = status == "paid";
+              final bool success = status == "paid" || status == "success";
 
               return Container(
                 margin: const EdgeInsets.only(bottom: 14),
-
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(18),
@@ -70,10 +77,8 @@ class TransactionHistoryScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-
                   child: Row(
                     children: [
                       Container(
@@ -81,13 +86,19 @@ class TransactionHistoryScreen extends StatelessWidget {
                         height: 55,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: paid
-                              ? Colors.green.shade100
-                              : Colors.orange.shade100,
+                          color: isTopup
+                              ? Colors.blue.shade100
+                              : (success
+                                    ? Colors.green.shade100
+                                    : Colors.orange.shade100),
                         ),
                         child: Icon(
-                          paid ? Icons.check_circle : Icons.schedule,
-                          color: paid ? Colors.green : Colors.orange,
+                          isTopup
+                              ? Icons.account_balance_wallet
+                              : (success ? Icons.check_circle : Icons.schedule),
+                          color: isTopup
+                              ? Colors.blue
+                              : (success ? Colors.green : Colors.orange),
                         ),
                       ),
 
@@ -98,15 +109,13 @@ class TransactionHistoryScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Order #${index + 1}",
+                              isTopup ? "TOP UP" : "ORDER #${index + 1}",
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                               ),
                             ),
-
                             const SizedBox(height: 4),
-
                             Text(
                               date,
                               style: TextStyle(
@@ -114,7 +123,6 @@ class TransactionHistoryScreen extends StatelessWidget {
                                 fontSize: 12,
                               ),
                             ),
-
                             const SizedBox(height: 8),
 
                             Container(
@@ -123,15 +131,21 @@ class TransactionHistoryScreen extends StatelessWidget {
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: paid
-                                    ? Colors.green.shade50
-                                    : Colors.orange.shade50,
+                                color: isTopup
+                                    ? Colors.blue.shade50
+                                    : (success
+                                          ? Colors.green.shade50
+                                          : Colors.orange.shade50),
                                 borderRadius: BorderRadius.circular(30),
                               ),
                               child: Text(
                                 status.toUpperCase(),
                                 style: TextStyle(
-                                  color: paid ? Colors.green : Colors.orange,
+                                  color: isTopup
+                                      ? Colors.blue
+                                      : (success
+                                            ? Colors.green
+                                            : Colors.orange),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
                                 ),
@@ -145,20 +159,14 @@ class TransactionHistoryScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            NumberFormat.currency(
-                              locale: 'id_ID',
-                              symbol: 'Rp ',
-                              decimalDigits: 0,
-                            ).format(total),
+                            "Rp $amount",
                             style: const TextStyle(
                               color: Color(0xFF1565C0),
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
                           ),
-
                           const SizedBox(height: 6),
-
                           const Icon(
                             Icons.arrow_forward_ios,
                             size: 14,

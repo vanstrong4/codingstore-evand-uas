@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../data/models/product_model.dart';
 import '../../../data/services/auth_service.dart';
 import '../../../data/services/product_service.dart';
-
+import '../../auth/screens/google_authenticator_page.dart';
 import '../../auth/screens/cart_screen.dart';
 import '../../auth/screens/login_screen.dart';
 import '../../auth/screens/transaction_history_screen.dart';
@@ -46,6 +46,18 @@ class HomeScreen extends StatelessWidget {
       appBar: CustomAppBar(
         title: "Coding Store",
         actions: [
+          IconButton(
+            icon: const Icon(Icons.security),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const GoogleAuthenticatorPage(),
+                ),
+              );
+            },
+          ),
+
           /// Cart
           IconButton(
             icon: const Icon(Icons.shopping_cart),

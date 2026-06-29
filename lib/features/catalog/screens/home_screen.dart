@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import '../../../data/services/product_service.dart';
-import '../../auth/widgets/product_card.dart';
-import '../../auth/widgets/custom_appbar.dart';
-import '../../../data/models/product_model.dart';
-import '../../auth/screens/cart_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../auth/screens/transaction_history_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../../data/models/product_model.dart';
 import '../../../data/services/auth_service.dart';
+import '../../../data/services/product_service.dart';
+
+import '../../auth/screens/cart_screen.dart';
 import '../../auth/screens/login_screen.dart';
+import '../../auth/screens/transaction_history_screen.dart';
+
+import '../../auth/widgets/custom_appbar.dart';
+import '../../auth/widgets/product_card.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -17,20 +20,22 @@ class HomeScreen extends StatelessWidget {
 
   final Color primaryBlue = const Color(0xFF1565C0);
 
-  /// ambil nama user dari firestore
+  /// Ambil nama user dari Firestore
   Future<String> getUserName() async {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) return "Developer";
 
     final doc = await FirebaseFirestore.instance
         .collection('users')
-        .doc(uid)
+        .doc(user.uid)
         .get();
 
-    if (doc.exists && doc.data()!.containsKey('name')) {
-      return doc['name'];
+    if (doc.exists) {
+      return doc.data()?['name'] ?? "Developer";
     }
 
-    return 'Developer';
+    return "Developer";
   }
 
   @override
@@ -41,6 +46,7 @@ class HomeScreen extends StatelessWidget {
       appBar: CustomAppBar(
         title: "Coding Store",
         actions: [
+          /// Cart
           IconButton(
             icon: const Icon(Icons.shopping_cart),
             onPressed: () {
@@ -50,18 +56,8 @@ class HomeScreen extends StatelessWidget {
               );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await AuthService().signOut();
 
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => LoginScreen()),
-                (route) => false,
-              );
-            },
-          ),
+          /// Riwayat Transaksi
           IconButton(
             icon: const Icon(Icons.receipt_long),
             onPressed: () {
@@ -71,11 +67,28 @@ class HomeScreen extends StatelessWidget {
               );
             },
           ),
+
+          /// Logout
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await AuthService().signOut();
+
+              if (!context.mounted) return;
+
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => LoginScreen()),
+                (route) => false,
+              );
+            },
+          ),
         ],
       ),
 
       body: Column(
         children: [
+          /// Header
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
@@ -119,6 +132,7 @@ class HomeScreen extends StatelessWidget {
 
           const SizedBox(height: 12),
 
+          /// Produk
           Expanded(
             child: StreamBuilder<List<Product>>(
               stream: service.getProducts(),
@@ -169,11 +183,11 @@ class HomeScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Colors.black12,
                               blurRadius: 10,
-                              offset: const Offset(0, 4),
+                              offset: Offset(0, 4),
                             ),
                           ],
                         ),

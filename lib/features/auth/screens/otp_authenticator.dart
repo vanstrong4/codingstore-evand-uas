@@ -16,7 +16,7 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
 
     await Future.delayed(const Duration(seconds: 1));
 
-    if (pinController.text == "111111") {
+    if (pinController.text == "719428") {
       Navigator.pop(context, true);
     } else {
       ScaffoldMessenger.of(
@@ -103,7 +103,7 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                   decoration: InputDecoration(
-                    hintText: "------",
+                    hintText: "719428",
                     filled: true,
                     fillColor: const Color(0xFFF3F6FB),
                     border: OutlineInputBorder(

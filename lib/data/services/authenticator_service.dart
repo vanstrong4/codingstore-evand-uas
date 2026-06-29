@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:otp/otp.dart';
 
 class AuthenticatorService {
-  /// Generate secret random (Base32-compatible)
   static String generateSecret({int length = 16}) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
     final random = Random.secure();
@@ -14,7 +13,6 @@ class AuthenticatorService {
     ).join();
   }
 
-  /// Generate otpauth:// URL untuk QR Code
   static String buildOtpAuthUrl({
     required String secret,
     required String email,

@@ -39,10 +39,24 @@ class AuthenticatorService {
     );
   }
 
-  /// Verifikasi kode OTP
+  /// Verifikasi kode OTP dengan toleransi ±30 detik
   static bool verifyCode({required String secret, required String code}) {
-    final currentCode = generateCode(secret);
+    final now = DateTime.now().millisecondsSinceEpoch;
 
-    return currentCode == code;
+    for (int i = -1; i <= 1; i++) {
+      final generated = OTP.generateTOTPCodeString(
+        secret,
+        now + (i * 30000),
+        interval: 30,
+        algorithm: Algorithm.SHA1,
+        isGoogle: true,
+      );
+
+      if (generated == code.trim()) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

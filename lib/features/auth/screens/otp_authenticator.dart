@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../../data/services/authenticator_service.dart';
 
 class AuthVerificationScreen extends StatefulWidget {
   const AuthVerificationScreen({super.key});
@@ -11,20 +15,49 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
   final pinController = TextEditingController();
   bool loading = false;
 
-  void verify() async {
+  Future<void> verify() async {
     setState(() => loading = true);
 
-    await Future.delayed(const Duration(seconds: 1));
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
 
-    if (pinController.text == "719428") {
-      Navigator.pop(context, true);
-    } else {
+      final doc = await FirebaseFirestore.instance
+          .collection("wallets")
+          .doc(user.uid)
+          .get();
+
+      if (!doc.exists) {
+        throw Exception("Wallet tidak ditemukan");
+      }
+
+      final secret = doc["authSecret"];
+
+      final valid = AuthenticatorService.verifyCode(
+        secret: secret,
+        code: pinController.text.trim(),
+      );
+
+      if (valid) {
+        if (!mounted) return;
+        Navigator.pop(context, true);
+      } else {
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Kode Google Authenticator salah")),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("PIN salah")));
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
     }
 
-    setState(() => loading = false);
+    if (mounted) {
+      setState(() => loading = false);
+    }
   }
 
   @override
@@ -85,7 +118,7 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
                 const SizedBox(height: 6),
 
                 Text(
-                  "Enter your 6-digit PIN to continue",
+                  "Masukkan kode dari Google Authenticator",
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
                 ),
@@ -103,7 +136,7 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                   decoration: InputDecoration(
-                    hintText: "719428",
+                    hintText: "Masukan OTP",
                     filled: true,
                     fillColor: const Color(0xFFF3F6FB),
                     border: OutlineInputBorder(

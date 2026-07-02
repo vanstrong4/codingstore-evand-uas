@@ -2,6 +2,8 @@
 
 Evand Coding Store adalah aplikasi e-commerce berbasis Flutter yang menyediakan katalog produk digital dan mendukung proses pembelian menggunakan Firebase Authentication, Cloud Firestore, serta integrasi Google Authenticator sebagai verifikasi keamanan saat checkout.
 
+Link Demo Aplikasi : https://www.youtube.com/watch?v=X-7YKp_WeaE
+
 ## Fitur
 
 * Login dan Register menggunakan Email/Password
